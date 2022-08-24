@@ -1,6 +1,6 @@
 {
-  "name": "gmail-application",
-  "version": "1.0.0",
+  "name": "gmail",
+  "version": "0.8",
   "description": "Gmail Web Client",
   "main": "main.js",
   "scripts": {
@@ -13,7 +13,7 @@
     "client",
     "app"
   ],
-  "homepage": "https://github.com/owner/project#readme",
+  "homepage": "https://github.com/slobodan-rs/GmailApp",
   "author": "sudo Coby <sudoslobodan@gmail.com>",
   "license": "CC0-1.0",
   "devDependencies": {
