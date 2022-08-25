@@ -1,6 +1,6 @@
 {
   "name": "gmail-linux",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Gmail Web Client",
   "main": "main.js",
   "scripts": {
