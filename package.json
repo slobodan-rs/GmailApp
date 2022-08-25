@@ -1,6 +1,6 @@
 {
   "name": "gmail-linux",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Gmail Web Client",
   "main": "main.js",
   "scripts": {
@@ -44,12 +44,12 @@
       "desktop": {
         "Icon": "org.gnome.Geary",
         "Name": "Gmail",
-        "X-GNOME": "UsesNotifications=true",
+        "SingleMainWindow": "true",
+        "X-GNOME-UsesNotifications": "true",
+        "X-GNOME-SingleWindow": "true",
         "StartupWMClass": "gmail-linux",
-        "Actions": [
-          "Network",
-          "WebBrowser"
-        ]
+        "Actions": "Quit",
+        "TryExec": "gmail-linux"
       }
     }
   }

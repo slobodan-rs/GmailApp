@@ -1,9 +1,29 @@
 // Modules to control application life and create native browser window
 const { app, BrowserWindow, Notification, Menu, Tray } = require("electron");
+let mainWindow = null;
+
+const gotTheLock = app.requestSingleInstanceLock();
+
+if (!gotTheLock) {
+  app.quit();
+} else {
+  app.on("second-instance", (event, commandLine, workingDirectory) => {
+    // Someone tried to run a second instance, we should focus our window.
+    if (mainWindow) {
+      if (!mainWindow.isVisible()) mainWindow.show();
+      mainWindow.focus();
+    }
+  });
+
+  // Create myWindow, load the rest of the app, etc...
+  app.on("ready", () => {
+    createWindow();
+  });
+}
 
 function createWindow() {
   // Create the browser window.
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 1280,
     height: 800,
     icon: "build/icon.png",
@@ -17,6 +37,8 @@ function createWindow() {
 
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()
+
+  // Open window maximized
   mainWindow.maximize();
 
   // Hide to tray on minimize
@@ -37,7 +59,7 @@ function createWindow() {
   // Tray icon
   let appIcon = null;
   app.whenReady().then(() => {
-    appIcon = new Tray("build/gmail-tray.png");
+    appIcon = new Tray(require("path").resolve(__dirname, "icon.png"));
     const contextMenu = Menu.buildFromTemplate([
       {
         label: "Show App",
@@ -77,13 +99,21 @@ function showNotification() {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
-  createWindow();
-
   app.on("activate", function () {
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
-    if (BrowserWindow.getAllWindows().length === 0) createWindow();
+    if (BrowserWindow.getAllWindows().length === 0) {
+      createWindow();
+    }
   });
+});
+
+var ipcMain = require("electron").ipcMain;
+ipcMain.on("asynchronous-message", function (evt, message) {
+  if (message == "createNewWindow") {
+    // Message received.
+    // Create new window here.
+  }
 });
 
 // Quit when all windows are closed, except on macOS. There, it's common
