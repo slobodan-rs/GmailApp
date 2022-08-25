@@ -1,11 +1,12 @@
 // Modules to control application life and create native browser window
-const { app, BrowserWindow, Notification } = require("electron");
+const { app, BrowserWindow, Notification, Menu, Tray } = require("electron");
 
 function createWindow() {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: 1280,
     height: 800,
+    icon: "build/icon.png",
     webPreferences: {
       preload: `${__dirname}/preload.js`,
     },
@@ -17,9 +18,51 @@ function createWindow() {
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()
   mainWindow.maximize();
+
+  // Hide to tray on minimize
+  /*   mainWindow.on("minimize", function (event) {
+    event.preventDefault();
+    mainWindow.hide();
+  }); */
+
+  mainWindow.on("close", function (event) {
+    if (!app.isQuiting) {
+      event.preventDefault();
+      mainWindow.hide();
+    }
+
+    return false;
+  });
+
+  // Tray icon
+  let appIcon = null;
+  app.whenReady().then(() => {
+    appIcon = new Tray("build/gmail-tray.png");
+    const contextMenu = Menu.buildFromTemplate([
+      {
+        label: "Show App",
+        click: function () {
+          mainWindow.isFocused() ? mainWindow.focus() : mainWindow.show();
+        },
+      },
+      {
+        label: "Quit",
+        click: function () {
+          app.isQuiting = true;
+          app.quit();
+        },
+      },
+    ]);
+
+    // Make a change to the context menu
+    contextMenu.items[1].checked = false;
+
+    // Call this again for Linux because we modified the context menu
+    appIcon.setContextMenu(contextMenu);
+  });
 }
 
-const NOTIFICATION_TITLE = "Basic Notification";
+/* const NOTIFICATION_TITLE = "Basic Notification";
 const NOTIFICATION_BODY = "Notification from the Main process";
 
 function showNotification() {
@@ -27,7 +70,7 @@ function showNotification() {
     title: NOTIFICATION_TITLE,
     body: NOTIFICATION_BODY,
   }).show();
-}
+} */
 /* app.whenReady().then(createWindow).then(showNotification); */
 
 // This method will be called when Electron has finished

@@ -44,6 +44,8 @@
       "desktop": {
         "Icon": "org.gnome.Geary",
         "Name": "Gmail",
+        "X-GNOME": "UsesNotifications=true",
+        "StartupWMClass": "gmail-linux",
         "Actions": [
           "Network",
           "WebBrowser"
